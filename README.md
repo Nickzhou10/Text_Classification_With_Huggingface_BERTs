@@ -4,7 +4,7 @@
 - Any suggestion will be welcomed.
 - Agenda:
 - [x] data cleaning by 0421
-- [ ] modeling by 0521
+- [x] modeling by 0521
 - [ ] pipeline by 0611
 
 ## Sturcture of the Project
