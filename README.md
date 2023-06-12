@@ -7,5 +7,4 @@
 - [x] modeling by 0521
 - [x] pipeline by 0611
 
-## Sturcture of the Project
-...
+
