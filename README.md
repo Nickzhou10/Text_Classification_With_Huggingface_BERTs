@@ -3,9 +3,9 @@
 - Data shall not be provided due to the Non Disclosure Agreement.
 - Any suggestion will be welcomed.
 - Agenda:
-- [x] data cleaning by 0421
+- [x] data cleaning by 0321
 - [x] modeling by 0521
-- [ ] pipeline by 0611
+- [x] pipeline by 0611
 
 ## Sturcture of the Project
 ...
