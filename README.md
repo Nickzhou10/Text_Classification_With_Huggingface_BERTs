@@ -4,8 +4,6 @@ This repository serves as a personal backup of my efforts in upgrading pipelines
 
 **Note:** Due to the Non-Disclosure Agreement, data cannot be provided in this repository.
 
-Any suggestions are welcomed.
-
 ## Project Status
 - [x] Data cleaning (Completed by 0321)
 - [x] Modeling (Completed by 0521)
