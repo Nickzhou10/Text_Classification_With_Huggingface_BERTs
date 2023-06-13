@@ -7,7 +7,7 @@
 - [x] modeling by 0521
 - [x] pipeline by 0611
 - to do:
-- [ ] build config.py to control parameters by 0701 (I was too young too naive 😹)
+- [ ] build config.py to control parameters (I was too young too naive 😹) by 0701
 # Functions :rocket:
 The project code can be reused for other text classification tasks with the following functions:
 - Automatically download models and tokenizers from Huggingface by simply inputing their model name.
