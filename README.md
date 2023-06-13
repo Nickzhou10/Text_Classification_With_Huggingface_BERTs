@@ -22,7 +22,7 @@ The project code can be reused for other text classification tasks and offers th
 - Automated training, testing, logging, and checkpointing for any DataFrames with 'text' and 'label' columns.
 - Designed pipelines for incremental training using checkpoints.
 
-## Usage
+## Usage :computer:
 
 To use this project, follow these steps:
 
