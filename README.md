@@ -1,4 +1,4 @@
-# NIQ Store Type Text Classification with BERT
+# Auto Text Classification with BERT
 
 This repository serves as a personal backup of my efforts in upgrading pipelines and models for the 'Store Advisor' project at NielsenIQ. :tada:
 
