@@ -2,12 +2,12 @@
 - The repository is a personal backup of my effort in upgrading pipelines and models for the 'Store Advisor' project at NielsenIQ. :tada:
 - Data shall not be provided due to the Non Disclosure Agreement.
 - Any suggestion will be welcomed.
-- Agenda:
+- Finished:
 - [x] data cleaning by 0321
 - [x] modeling by 0521
 - [x] pipeline by 0611
 - to do:
-- [ ] build config.py to control parameters by 0701
+- [ ] build config.py to control parameters by 0701 (I was too young too naive 😹)
 # Functions :rocket:
 The project code can be reused for other text classification tasks with the following functions:
 - Automatically download models and tokenizers from Huggingface by simply inputing their model name.
