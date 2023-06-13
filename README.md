@@ -18,9 +18,9 @@ To-do:
 
 The project code can be reused for other text classification tasks and offers the following functions:
 
-- Automatic download of models and tokenizers from Huggingface by providing the model name.
+- Automatic downloading of models and tokenizers from Huggingface by simply providing the model name.
 - Automated training, testing, logging, and checkpointing for any DataFrames with 'text' and 'label' columns.
-- Designed pipelines for incremental training from checkpoints.
+- Designed pipelines for incremental training using checkpoints.
 
 ## Usage
 
