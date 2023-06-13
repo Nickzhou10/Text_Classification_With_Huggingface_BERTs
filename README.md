@@ -41,4 +41,4 @@ Contributions to this project are welcome! If you have any suggestions, ideas, o
 
 ## License
 
-This project is licensed under the 
+This project will be licensed under the [MIT License](LICENSE) once finalized
