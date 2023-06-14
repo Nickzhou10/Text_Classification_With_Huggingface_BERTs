@@ -29,7 +29,7 @@ To use this project, follow these steps:
 2. Explore the available pretrained language models on Huggingface that interest you.
 3. Copy the model name and paste it into the `model_name` variable in `main.py`.
 4. :wrench: Adjust relevant parameters such as learning rate, batch size, etc., as specified in `main.py`.
-5. :wrench: Try out different techniques and parameters, such as focal loss and class balancing, which are provided in the `tool` folder.
+5. :wrench: Try out different techniques and parameters, such as focal loss and class balancing, which are provided in the `tools` folder.
 6. Once you have obtained the best model, you can also perform incremental training on additional data, and the necessary code is already provided for you.
 
 Please refer to the documentation within the code for more detailed usage instructions and examples.
