@@ -11,7 +11,7 @@ This repository serves as a personal backup of my efforts in upgrading pipelines
 
 To-do:
 - [ ] Finalize documentation and in-line doc str (Target completion date: 0618)
-- [ ] Build `config.py` to control parameters (I was too young, too naive 😹) (Target completion date: 0701)
+- [ ] Build `config.py` to control parameters (should have done it earlier 😹) (Target completion date: 0701)
 
 ## Functions :rocket:
 
