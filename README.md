@@ -12,7 +12,7 @@ This repository serves as a personal backup of my efforts in upgrading pipelines
 To-do:
 - [ ] Finalize documentation and in-line doc str (Target completion date: 0618)
 - [ ] Build `config.py` to control parameters (I was too young, too naive 😹) (Target completion date: 0701)
-- [ ] Obtain [MIT License](LICENSE) when everything is ready (Target completion date: 0711)
+
 ## Functions :rocket:
 
 The project code can be reused for other text classification tasks and offers the following functions:
@@ -40,4 +40,4 @@ Contributions to this project are welcome! If you have any suggestions, ideas, o
 
 ## License
 
-This project will be licensed under the [MIT License](LICENSE) once finalized.
+This projectis licensed under the [MIT License](LICENSE).
