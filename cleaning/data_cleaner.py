@@ -27,8 +27,7 @@ class cleaner:
             * defines the parameters for the cleaning methods above
     '''
 
-    def __init__(self,data):
-        self.data = data
+    def __init__(self):
         # for adding other info to text
         self.text_list = ['province','city','urban','text']
         # for cleaning errors
@@ -44,15 +43,15 @@ class cleaner:
         self.subset_for_dup = ['text']
     
     
-    def checker(self):
-        check = checker(self.data)
+    def checker(self, data):
+        check = checker(data)
         self.duplicated = check.check_duplicates
         self.ck_by_bins = check.check_len_by_bins
         self.over_len_limit = check.over_len_limit
 
     
-    def standard_process(self):
-        res = self.data.copy()
+    def standard_process(self, data):
+        res = data.copy()
         res = self.clean_data(res,self._clean_errors)
         res = self.clean_data(res,self._clean_format)
         res = self.clean_data(res,self._clean_lenthy)

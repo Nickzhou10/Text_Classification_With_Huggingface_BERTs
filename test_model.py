@@ -35,8 +35,9 @@ class TestModel:
                           4: 'others', 5: 'super', 6: 'tt'}
         self.inverse_label = dict((v,k) for k, v in self.label_map.items())
         # load df to tensor processor
-        self.processor = Preprocess(self.model_name, batch_size=self.batch_size,
-                                    cache_dir=self.pretrained_path, n_jobs=self.n_jobs)
+        self.processor = Preprocess(self.model_name, self.pretrained_path,
+                                    batch_size=self.batch_size,
+                                    n_jobs=self.n_jobs)
         # load model
         self.model = AutoModelForClassification(self.model_name, 
                                                 self.pretrained_path).to(self.device)
@@ -44,8 +45,9 @@ class TestModel:
         self.model.load_state_dict(torch.load(self.state_dict_path,
                                    map_location=self.device))
         print('using: ' + str(torch.get_num_threads()) + ' cores')
+        print('using: ' + str(self.device))
         
-        
+              
     def test(self, test_df):
         test_df = add_info(test_df)
         test_df.label = test_df.label.replace(self.inverse_label)
@@ -86,10 +88,13 @@ class TestModel:
     
     def deployment(self, pre):
         pre_raw = self.adjust_df(pre)
-        pre_ready = cleaner(pre_raw).deployment_process()
+        pre_ready = cleaner().deployment_process(pre_raw)
         pre_ready = add_info(pre_ready)
-        pre_loader = self.processor.process_data(pre_ready, deployment=True)
+        print('starting process data to tensor...')
+        # pre_loader = self.processor.process_data(pre_ready, deployment=True)
+        pre_loader = self.processor.deployment_process(pre_ready)
         start_time = time.time()
+        print('starting predicting...') 
         predicted, info_list = self.deployment_predict(pre_loader)
         time_used = round(time.time() - start_time,1)
         print(f"used {time_used} seconds")
@@ -104,12 +109,12 @@ class TestModel:
         return predicted
         
     
-    def deployment_predict(self,test_loader):
+    def deployment_predict(self, pre_loader):
         self.model.eval()
         predicted = []
         info_list = []
         with torch.no_grad():
-            for batch_idx, (input_ids, attention_mask, info) in enumerate(test_loader):
+            for batch_idx, (input_ids, attention_mask, info) in enumerate(pre_loader):
                 input_ids = input_ids.to(self.device)
                 attention_mask = attention_mask.to(self.device)
                 outputs = self.model(input_ids, attention_mask=attention_mask)
@@ -119,6 +124,7 @@ class TestModel:
         df = pd.DataFrame(predicted, columns=range(len(predicted[0])))
         df = df.rename(columns=self.label_map)
         return df, info_list
+
 
 if __name__ == '__main__': 
     # unit test
