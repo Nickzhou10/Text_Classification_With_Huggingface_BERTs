@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Apr 22 16:24:39 2023
+Created on Sat Mar 22 16:24:39 2023
 
 @author: nick
 """
@@ -17,6 +17,16 @@ from transformers import AutoModelForSequenceClassification as AutoModelSelect
 
 
 class AutoModelForClassification(nn.Module):
+    """ 
+    Initialize the AutoModelForClassification module.
+
+    Args:
+        model_name (str): The model name from the Hugging Face model hub.
+        cache_dir (str): The directory to save the pre-trained model.
+        num_classes (int): The number of classes for the classification task.
+        finetune_all (bool): Whether to finetune all layers of the model.
+    """
+    
     def __init__(self, model_name, cache_dir, num_classes=7, finetune_all=False):
         super(AutoModelForClassification, self).__init__()
         self.model = AutoModelSelect.from_pretrained(model_name,
@@ -36,6 +46,17 @@ class AutoModelForClassification(nn.Module):
 
 
     def forward(self, input_ids, attention_mask):
+        """
+        Perform a forward pass of the model.
+        
+        Args:
+            input_ids (torch.Tensor): The input token IDs of shape (batch_size, sequence_length).
+            attention_mask (torch.Tensor): The attention mask of shape (batch_size, sequence_length).
+        
+        Returns:
+            output (logits) (torch.Tensor): The output logits of the 
+            model of shape (batch_size, num_classes).
+        """
         # run model with the data
         outputs = self.model(input_ids=input_ids, attention_mask=attention_mask)
         # get hidden layers

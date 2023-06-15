@@ -20,12 +20,38 @@ warnings.filterwarnings("ignore")
  
 
 class BertTrainer:
-    '''
-    give me sometime to edit this 
+    """ 
+    It is a client code to processes df to tensor df automatically; download 
+    pretrained model from Huggingface with automatic selector of model type and
+    its corresponding tokenizers; automatically fine tuning and train on your
+    own data. You can try different models like:
+        - model_name = 'uer/roberta-base-finetuned-chinanews-chinese'
+        - model_name = 'tuhailong/cross_encoder_roberta-wwm-ext_v1'
+        etc, and etc...
+        
+    All you need is just to input the name of the pretrained model 
+    you wish to use, the train&valid datasets, and the code will 
+    do the rest for you to generate a trained model and classfication reports.
+
+    Shape:
+        - dataset: df with df.label and df.text is a must for training;
+                   df with df.text is a must for prediction.
+
+    Args:
+        model_name (str, required): model name copied from huggingface 
+        experiment_name (str, required): place to save the pre-trained model
+        n_jobs (int, optional): cpu cores to use for DataLoader & CPU training(if no GPU avaliable).
+            Defaults to 8.
+            
+    Methods:
+        - balance(): ways to perform both undersampling and oversampling
+        - training(): input train&valid sets to get a trained model in output path
+        auto-generating reports once an epoch is finished. 
+        - testing(): input test set to get the test report printed
+        - save_report(): save the train, valid, test reports and parameters used to a xlsx file
+    """
     
-    '''
-    
-    def __init__(self,model_name,experiment_name, n_jobs=32):
+    def __init__(self,model_name,experiment_name, n_jobs=8):
         # define paths
         self.experiment_name = experiment_name
         self.output_path = 'output/'+ self.experiment_name
@@ -144,27 +170,29 @@ class BertTrainer:
          
           
 if __name__ == '__main__': 
-    n_jobs = 8 # for controlling cpu
-    model_name = 'bert-base-chinese'  
-    
-    #%%
+
     # training baselines, input df cols: text, label
     # load data
     train = pd.read_csv('data/train.csv', index_col=0)
     valid = pd.read_csv('data/valid.csv', index_col=0)
     test = pd.read_csv('data/test.csv', index_col=0)
+    # some config
+    n_jobs = 8 # for controlling cpu
+    model_name = 'bert-base-chinese'  
     # training 
-    experiment_name = 'bert-base-chinese_temp/'
+    experiment_name = 'bert-base-chinese_temp'
     model = BertTrainer(model_name, experiment_name, n_jobs=n_jobs)
     model.training(train, valid)
+    # testing
     model.testing(test) 
     model.save_report()
-    #%%
-    # loading unused data(test/valid set) for training
+    
+    #%% the rest is the pipeline for refitting & prediction
+    # loading unused data(example: using more test/valid set) for training
     train, valid_refit = split_df(test,0.125,42)
     train = pd.concat([valid, train])
     # change experiment_name to make a different output path 
-    experiment_name = 'bert-base-chinese_refit_test/'
+    experiment_name = 'bert-base-chinese_refit_test'
     # define a model to load
     best_model = '../nlp_sa_test/output/current_best_balanced/model.pth' 
     model_refit = BertTrainer(model_name, experiment_name, n_jobs=n_jobs)
@@ -194,8 +222,8 @@ if __name__ == '__main__':
     final.to_csv('sa_202312_release.csv')
      
     
-    
-    
+    # ck = pd.read_csv('D:/niq/nlp_sa_test/sa_202312_release.csv').set_index(['shop_id', 'sa_id', 'source_type',])
+    # all_zeros_rows = ck[(ck == 0).all(axis=1)]
     
     
     

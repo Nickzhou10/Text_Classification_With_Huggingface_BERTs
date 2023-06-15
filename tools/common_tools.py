@@ -72,11 +72,12 @@ def release(pre_cleaned, pred):
     result = result.drop(result.columns,axis=1)
     
     final = pd.concat([result,pred], axis=0).fillna(0)
-    final.loc[final.index.get_level_values('source_type').isin(['comment_baby', 'comment_cos']), :] = 0
+    # final.loc[final.index.get_level_values('source_type').isin(['comment_baby', 'comment_cos']), :] = 0
     final = final.droplevel('text')
     assert len(final[final.isna().any(axis=1)])==0, 'contains nans'
     assert len(final)==len(pre_cleaned), 'unequal len'
     return final
+
 
 if __name__ == '__main__':
     pass
