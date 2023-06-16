@@ -5,7 +5,7 @@ This repository serves as a backup of my efforts in upgrading pipelines and mode
 **Note:** Due to the Non-Disclosure Agreement, data cannot be provided in this repository.
 
 Anyway...
-
+🌟 ** Is my very first open-source project, so... ** 🌟
 🌟 **If you find this project useful or interesting, please consider giving it a star! It helps me know that I'm on the right track.** 🌟
 
 ## Project Status
@@ -41,6 +41,10 @@ Please refer to the documentation within the code for more detailed usage instru
 ## Contributions
 
 Contributions to this project are welcome! If you have any suggestions, ideas, or improvements, please feel free to open an issue or submit a pull request.
+
+## Support
+
+If you encounter any issues or have any questions, feel free to open an issue on the GitHub repository. Your feedback and suggestions are highly appreciated.
 
 ## License
 
