@@ -4,9 +4,7 @@ This repository serves as a backup of my efforts in upgrading pipelines and mode
 
 **Note:** Due to the Non-Disclosure Agreement, data cannot be provided in this repository.
 
-Anyway...
-
-🌟 ** Is my very first open-source project, so... ** 🌟
+Is my very first open-source project, so...
 
 🌟 **If you find this project useful or interesting, please consider giving it a star! It helps me know that I'm on the right track.** 🌟
 
