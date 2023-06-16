@@ -4,6 +4,12 @@ This repository serves as a backup of my efforts in upgrading pipelines and mode
 
 **Note:** Due to the Non-Disclosure Agreement, data cannot be provided in this repository.
 
+Anyway...
+
+# Awesome Project
+
+🌟 **If you find this project useful or interesting, please consider giving it a star! It helps me know that I'm on the right track.** 🌟
+
 ## Project Status
 - [x] Data cleaning (Completed by 0321)
 - [x] Modeling (Completed by 0521)
@@ -13,9 +19,9 @@ To-do:
 - [ ] Finalize documentation and in-line doc str (Target completion date: 0618)
 - [ ] Build `config.py` to control parameters (should have done it earlier 😹) (Target completion date: 0701)
 
-## Functions :rocket:
+## Features :rocket:
 
-The project code can be reused for other text classification tasks and offers the following functions:
+The project code can be reused for other text classification tasks and offers the following features:
 
 - Automatic downloading of models and tokenizers from Huggingface by simply providing the model name.
 - Automated training, testing, logging, and checkpointing for any DataFrames with 'text' and 'label' columns.
@@ -26,7 +32,7 @@ The project code can be reused for other text classification tasks and offers th
 To use this project, follow these steps:
 
 1. Prepare cleaned training, validation, and testing datasets with columns such as 'text' and 'label'.
-2. Explore the available pretrained language models on Huggingface that interest you.
+2. Explore the available pre-trained language models on Huggingface that interest you.
 3. Copy the model name and paste it into the `model_name` variable in `main.py`.
 4. :wrench: Adjust relevant parameters such as learning rate, batch size, etc., as specified in `main.py`.
 5. :wrench: Try out different techniques and parameters, such as focal loss and class balancing, which are provided in the `tools` folder.
