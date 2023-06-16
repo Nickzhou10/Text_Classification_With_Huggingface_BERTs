@@ -6,8 +6,6 @@ This repository serves as a backup of my efforts in upgrading pipelines and mode
 
 Anyway...
 
-# Awesome Project
-
 🌟 **If you find this project useful or interesting, please consider giving it a star! It helps me know that I'm on the right track.** 🌟
 
 ## Project Status
