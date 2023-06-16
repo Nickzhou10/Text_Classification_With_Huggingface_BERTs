@@ -49,6 +49,11 @@ class BertTrainer:
         auto-generating reports once an epoch is finished. 
         - testing(): input test set to get the test report printed
         - save_report(): save the train, valid, test reports and parameters used to a xlsx file
+        
+    !!! TO BE UPDATED:
+        1. AUTO LABEL ENCODING & AUTO ENCODE BACK
+        before updating you may need to adjest the label map&No.class mannually
+        (e.g., self.label_map)
     """
     
     def __init__(self,model_name,experiment_name, n_jobs=8):
@@ -68,7 +73,7 @@ class BertTrainer:
         self.max_epochs = 2
         self.learning_rate = 1e-5
         self.finetune_all = True
-        self.balance_required = True
+        self.balance_required = False
         torch.set_num_threads(self.n_jobs)
         self.label_map = {0: 'baby', 1: 'cvs', 2: 'hyper', 3: 'mini', 
                           4: 'others', 5: 'super', 6: 'tt'}
@@ -173,9 +178,9 @@ if __name__ == '__main__':
 
     # training baselines, input df cols: text, label
     # load data
-    train = pd.read_csv('data/train.csv', index_col=0)
-    valid = pd.read_csv('data/valid.csv', index_col=0)
-    test = pd.read_csv('data/test.csv', index_col=0)
+    train = pd.read_csv('data/train.csv', index_col=0).sample(10000)
+    valid = pd.read_csv('data/valid.csv', index_col=0).sample(10000)
+    test = pd.read_csv('data/test.csv', index_col=0).sample(10000)
     # some config
     n_jobs = 8 # for controlling cpu
     model_name = 'bert-base-chinese'  
@@ -187,39 +192,39 @@ if __name__ == '__main__':
     model.testing(test) 
     model.save_report()
     
-    #%% the rest is the pipeline for refitting & prediction
-    # loading unused data(example: using more test/valid set) for training
-    train, valid_refit = split_df(test,0.125,42)
-    train = pd.concat([valid, train])
-    # change experiment_name to make a different output path 
-    experiment_name = 'bert-base-chinese_refit_test'
-    # define a model to load
-    best_model = '../nlp_sa_test/output/current_best_balanced/model.pth' 
-    model_refit = BertTrainer(model_name, experiment_name, n_jobs=n_jobs)
-    # reconfig
-    model_refit.balance_required = False
-    model_refit.max_epochs = 2
-    # training
-    model_refit.training(train, valid_refit, refit=True, fitted_model_path=best_model,
-                         warmup=False)
-    refit_report = model_refit.trainer.valid_report
-    # test on previous model to see if improved
-    pretrained_path = '../nlp_sa_test/pretrained/bert-base-chinese'
-    final_model_path = '../nlp_sa_test/output/current_best_balanced/model.pth'
-    refit_test = TestModel(model_name, final_model_path, pretrained_path, n_jobs=n_jobs)
-    refit_previous_report = refit_test.test(valid_refit)
-    model_refit.save_report(refit=True)
-    refit_previous_report.to_excel('output/bert-base-chinese_refit_test/output_refit_previous_best.xlsx')
-    #%%
-    # prediction execpt 'baby cos' for final deployment using desired model.pth 
-    torch.cuda.empty_cache()
-    pre = pd.read_csv('data/pre.csv',index_col=0)
-    final_model_path = '../nlp_sa_test/output/bert-base-chinese_refit_test/model.pth'
-    final = TestModel(model_name, final_model_path, pretrained_path, n_jobs=n_jobs)
-    pre_cleaned = final.adjust_df(pre)
-    res = final.deployment(pre)
-    final = release(pre_cleaned, res)
-    final.to_csv('sa_202312_release.csv')
+    # #%% the rest is the pipeline for refitting & prediction
+    # # loading unused data(example: using more test/valid set) for training
+    # train, valid_refit = split_df(test,0.125,42)
+    # train = pd.concat([valid, train])
+    # # change experiment_name to make a different output path 
+    # experiment_name = 'bert-base-chinese_refit_test'
+    # # define a model to load
+    # best_model = '../nlp_sa_test/output/current_best_balanced/model.pth' 
+    # model_refit = BertTrainer(model_name, experiment_name, n_jobs=n_jobs)
+    # # reconfig
+    # model_refit.balance_required = False
+    # model_refit.max_epochs = 2
+    # # training
+    # model_refit.training(train, valid_refit, refit=True, fitted_model_path=best_model,
+    #                      warmup=False)
+    # refit_report = model_refit.trainer.valid_report
+    # # test on previous model to see if improved
+    # pretrained_path = '../nlp_sa_test/pretrained/bert-base-chinese'
+    # final_model_path = '../nlp_sa_test/output/current_best_balanced/model.pth'
+    # refit_test = TestModel(model_name, final_model_path, pretrained_path, n_jobs=n_jobs)
+    # refit_previous_report = refit_test.test(valid_refit)
+    # model_refit.save_report(refit=True)
+    # refit_previous_report.to_excel('output/bert-base-chinese_refit_test/output_refit_previous_best.xlsx')
+    # #%%
+    # # prediction execpt 'baby cos' for final deployment using desired model.pth 
+    # torch.cuda.empty_cache()
+    # pre = pd.read_csv('data/pre.csv',index_col=0)
+    # final_model_path = '../nlp_sa_test/output/bert-base-chinese_refit_test/model.pth'
+    # final = TestModel(model_name, final_model_path, pretrained_path, n_jobs=n_jobs)
+    # pre_cleaned = final.adjust_df(pre)
+    # res = final.deployment(pre)
+    # final = release(pre_cleaned, res)
+    # final.to_csv('sa_202312_release.csv')
      
     
     # ck = pd.read_csv('D:/niq/nlp_sa_test/sa_202312_release.csv').set_index(['shop_id', 'sa_id', 'source_type',])
