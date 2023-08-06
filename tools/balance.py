@@ -54,7 +54,6 @@ class BalanceClasses:
     
     def experiment1(self): 
         df = self.balance_df(df,self._similarity_undersampling)
-        df.to_csv('data/data_b.csv')
         df = self.balance_df(df,self._geo_oversampling)
         train, valid = self.split_train_valid(df)
         return train, valid 
