@@ -14,8 +14,7 @@ Anyway, it's my very first open-source project, so...
 - [x] Pipeline development (Completed by 0611)
 
 To-do:
-- [ ] Finalize documentation and in-line doc str (Target completion date: 0628)
-- [ ] Build `config.py` to control parameters (should have done it earlier 😹) (Target completion date: 0711)
+- [ ] Finalize some codes and in-line doc str (Target completion date: 0828)
 
 ## Features :rocket:
 
