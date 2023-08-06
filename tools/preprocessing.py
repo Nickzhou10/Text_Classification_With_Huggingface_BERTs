@@ -30,24 +30,24 @@ class Preprocess:
             Defaults to 8.
     """
     
-    def __init__(self, model_name, cache_dir, batch_size=256, n_jobs=8):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name,
-                                                       cache_dir=cache_dir,
+    def __init__(self, config):
+        self.config = config
+        self.tokenizer = AutoTokenizer.from_pretrained(self.config.model_name,
+                                                       cache_dir=self.config.pretrained_cache_path,
                                                        trust_remote_code=True)
-        self.n_jobs = n_jobs
-        self.batch_size = batch_size
         self.drop_last = False
         self.pin_memory = False
-        
+        self.shuffle = not self.config.deployment
     
-    def process_data(self, dataset, deployment=False):
+    
+    def process_data(self, dataset):
         df = dataset.copy()
-        tensor_df = self._to_tensor(df, deployment)
-        loaded_df = self._data_loader(tensor_df, shuffle=not deployment)
+        tensor_df = self._to_tensor(df)
+        loaded_df = self._data_loader(tensor_df)
         return loaded_df
         
     
-    def _to_tensor(self, df, deployment=False):
+    def _to_tensor(self, df):
         text = df.text.tolist()
         tokens = self.tokenizer.batch_encode_plus(text,
                                                   padding='longest',
@@ -59,7 +59,7 @@ class Preprocess:
         input_ids = tokens['input_ids']
         attention_mask = tokens['attention_mask']
         
-        if deployment:
+        if self.config.deployment:
             info = torch.tensor(df.index.tolist())
             tensor_df = TensorDataset(input_ids, attention_mask, info)
         else:
@@ -69,11 +69,12 @@ class Preprocess:
         return tensor_df
     
     
-    def _data_loader(self, tensor_df, shuffle=True):
-        dataloader = DataLoader(tensor_df, batch_size=self.batch_size, 
-                                shuffle=shuffle, 
+    def _data_loader(self, tensor_df):
+        dataloader = DataLoader(tensor_df, 
+                                batch_size=self.config.batch_size, 
+                                shuffle=self.shuffle, 
                                 pin_memory=self.pin_memory,
-                                num_workers=self.n_jobs, 
+                                num_workers=self.config.n_jobs, 
                                 drop_last=self.drop_last)
         return dataloader
     

@@ -27,22 +27,20 @@ class AutoModelForClassification(nn.Module):
         finetune_all (bool): Whether to finetune all layers of the model.
     """
     
-    def __init__(self, model_name, cache_dir, num_classes=7, finetune_all=False):
+    def __init__(self, config):
         super(AutoModelForClassification, self).__init__()
-        self.model = AutoModelSelect.from_pretrained(model_name,
-                                                     cache_dir=cache_dir, 
-                                                     output_hidden_states=True)
+        self.model = AutoModelSelect.from_pretrained(config.model_name,
+                                                     cache_dir=config.pretrained_cache_path, 
+                                                     output_hidden_states=True,
+                                                     trust_remote_code=True)
         print(self.model)
-        self.dropout = nn.Dropout(0.1)
-        self.num_classes = num_classes
+        self.dropout = nn.Dropout(config.dropout_ratio)
         # Define a fully connected layer
         self.classifier = torch.nn.Linear(self.model.config.hidden_size, 
-                                          self.num_classes)
+                                          config.num_classes)
         # whether to update weights 
         for param in self.model.parameters():
-            param.requires_grad = finetune_all
-        for param in self.classifier.parameters():
-            param.requires_grad = True
+            param.requires_grad = config.enable_finetune_all
 
 
     def forward(self, input_ids, attention_mask):

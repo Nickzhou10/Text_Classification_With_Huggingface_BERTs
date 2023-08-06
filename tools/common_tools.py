@@ -21,6 +21,15 @@ def label_to_id(labels):
     return transformed, mapping
 
 
+def label_map(labels):
+    label_encoder = LabelEncoder()
+    label_encoder.fit(labels)
+    mapping = dict(zip(label_encoder.transform(label_encoder.classes_), label_encoder.classes_))
+    inverse_mapping = dict((v,k) for k, v in mapping.items())
+    mapping_dict = {'mapping':mapping,'inverse_mapping':inverse_mapping}
+    return mapping_dict
+
+
 def add_info(df):
     df.urban = df.urban.replace({'Y': '市区', 'N': '郊区'})
     df.text_bk = df.text.copy()
@@ -46,12 +55,19 @@ def compute_class_weights(targets, smoothing_factor=0.0):
     return class_weights
  
 
-def split_df(data, test_size, random_state):
-    train, valid = train_test_split(data, 
-                                    test_size=test_size,
+def split_df(df, split_size, random_state):
+    train, valid = train_test_split(df, 
+                                    test_size=split_size,
                                     random_state=random_state, 
-                                    stratify=data.label)
+                                    stratify=df.label)
     return train, valid
+
+
+def adjust_df(df):
+    mapping = {'std_name':'text','adname_1':'province',
+               'adname_2':'city','urban_tag':'urban'}
+    df = df.reset_index().rename(columns=mapping)
+    return df
 
 
 def class_report(true_labels, predicted, label_map):
@@ -63,19 +79,15 @@ def class_report(true_labels, predicted, label_map):
     return res_tb
 
 
-def release(pre_cleaned, pred):
-    pre_cleaned = pre_cleaned.set_index(['shop_id', 'sa_id', 'source_type', 'text'])
-    indexes = (set(pre_cleaned.index.get_level_values('shop_id'))-
-               set(pred.index.get_level_values('shop_id')))
-    result = (pre_cleaned.loc[pre_cleaned.index.get_level_values('shop_id').
-                              isin(indexes)])
-    result = result.drop(result.columns,axis=1)
+def release(pre, res):
     
-    final = pd.concat([result,pred], axis=0).fillna(0)
-    # final.loc[final.index.get_level_values('source_type').isin(['comment_baby', 'comment_cos']), :] = 0
+    pre = add_info(adjust_df(pre)).set_index(['shop_id','sa_id'])[['text','source_type']]
+    res = res.reset_index().set_index(['shop_id','sa_id'])
+    final = pre.align(res, join='outer', axis=0)[1].fillna(0)
+    final = final.set_index(['source_type','text'], append=True)
     final = final.droplevel('text')
     assert len(final[final.isna().any(axis=1)])==0, 'contains nans'
-    assert len(final)==len(pre_cleaned), 'unequal len'
+    assert len(final)==len(pre), 'unequal len'
     return final
 
 
