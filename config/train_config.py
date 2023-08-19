@@ -10,7 +10,6 @@ class TrainConfig:
     # data parameters
     random_state = 42
     num_classes = 7
-    train_pct = 0.7
     vali_split_ratio = 0.2
     enable_balance = False
     balance_method = 'auto'
@@ -18,7 +17,7 @@ class TrainConfig:
     
     # training device settings
     n_jobs = 8
-    device = 'cuda' # 'cpu'
+    device = 'cpu' # 'cuda'
     
     # preprocessing settings
     balance_required = False
@@ -27,7 +26,8 @@ class TrainConfig:
     incremental_training = False
     experiment_name = r'test'
     model_name = r'bert-base-chinese'
-    batch_size = 64
+    trust_remote_code = False
+    batch_size = 4
     learning_rate = 1e-5
     max_epochs = 1
     dropout_ratio = 0.1
@@ -43,19 +43,14 @@ class TrainConfig:
     patience = 1
 
     # data paths
-    output_path = r'saved_model/output/' + experiment_name
+    output_path = r'saved_model/trained_model/' + experiment_name
     model_output_path = output_path  + '/model.pth'
-    pretrained_cache_path = r'saved_model/pretrain_model'
-    
-    # prediction settings
-    best_model = 'saved_model/output/bert-base-chinese_refit_test'
-    
-    
-    
+    pretrained_cache_path = r'saved_model/pretrain_model/' + model_name
+     
     
 if __name__ == '__main__':
     
-    print(Config.finetune_all)
+    print(TrainConfig.enable_finetune_all)
 
 
 

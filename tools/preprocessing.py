@@ -37,7 +37,14 @@ class Preprocess:
                                                        trust_remote_code=True)
         self.drop_last = False
         self.pin_memory = False
-        self.shuffle = not self.config.deployment
+        
+    
+    def process_pred(self, text):
+        pred = self.tokenizer(text, padding=True, max_length=512,
+                                truncation=True, return_tensors="pt")
+        pred_loader = TensorDataset(pred.input_ids, pred.attention_mask)
+        pred_loader = DataLoader(pred_loader)
+        return pred_loader
     
     
     def process_data(self, dataset):
@@ -70,6 +77,7 @@ class Preprocess:
     
     
     def _data_loader(self, tensor_df):
+        self.shuffle = not self.config.deployment
         dataloader = DataLoader(tensor_df, 
                                 batch_size=self.config.batch_size, 
                                 shuffle=self.shuffle, 
@@ -98,9 +106,6 @@ if __name__ == '__main__':
     print('batch_attention_mask shape: \n',batch_attention_mask.shape)
     print('batch_labels shape: \n',batch_labels.shape)
     
-
-
-
 
 
 

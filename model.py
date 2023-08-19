@@ -13,7 +13,10 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup
 from sklearn.metrics import classification_report
-from transformers import AutoModelForSequenceClassification as AutoModelSelect
+from transformers import AutoModelForSequenceClassification
+from transformers.utils import logging
+# only output error messages
+logging.set_verbosity_error()
 
 
 class AutoModelForClassification(nn.Module):
@@ -29,11 +32,12 @@ class AutoModelForClassification(nn.Module):
     
     def __init__(self, config):
         super(AutoModelForClassification, self).__init__()
-        self.model = AutoModelSelect.from_pretrained(config.model_name,
-                                                     cache_dir=config.pretrained_cache_path, 
-                                                     output_hidden_states=True,
-                                                     trust_remote_code=True)
-        print(self.model)
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            config.model_name,
+            cache_dir=config.pretrained_cache_path, 
+            output_hidden_states=True,
+            trust_remote_code=config.trust_remote_code)
+        # print(self.model)
         self.dropout = nn.Dropout(config.dropout_ratio)
         # Define a fully connected layer
         self.classifier = torch.nn.Linear(self.model.config.hidden_size, 
