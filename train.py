@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Apr 23 17:28:24 2023
-https://huggingface.co/Davlan/distilbert-base-multilingual-cased-ner-hrl
 @author: nick
 """
 
@@ -19,7 +18,6 @@ from tools.common_tools import label_to_id, add_info, class_report
 from tools.focal_loss import FocalLoss
 import torch.nn.functional as F
 import xlsxwriter
- 
 
 class TrainModel:
     '''
@@ -34,12 +32,7 @@ class TrainModel:
         if self.config.device == 'cuda':
             torch.cuda.empty_cache()
             torch.cuda.manual_seed(self.config.random_state)
-        # load model / load previous model parameter to model
-        if self.config.incremental_training:
-            model.load_state_dict(torch.load(self.config.fitted_model_path,
-                                             map_location=self.device))
-            print('incremental training on model: ' + self.config.fitted_model_path)
-        self.model = model.to(self.device)
+        self.model = model
         # define optimizer & criterion
         self.optimizer = AdamW(self.model.parameters(), lr=self.config.learning_rate)
         self.criterion = nn.CrossEntropyLoss() 
@@ -60,6 +53,12 @@ class TrainModel:
         
 
     def train_model(self, train_loader, valid_loader):
+        # load model / load previous model parameter to model
+        if self.config.incremental_training:
+            self.model.load_state_dict(torch.load(self.config.fitted_model_path,
+                                             map_location=self.device))
+            print('incremental training on model: ' + self.config.fitted_model_path)
+        self.model = self.model.to(self.device)
         if self.config.warmup:
             self._warmup(train_loader)
         best_valid_loss = float('inf')
@@ -169,25 +168,16 @@ class TrainModel:
         return valid_loss, res_tb
     
     
-    def predict(self, pred_loader):
-        self.model.eval()
-        total_loss = 0
+    def predict(self, model, pred_loader):
+        model.eval()
         predicted = []
         with torch.no_grad():
-            for batch_idx, (input_ids, attention_mask, labels) in enumerate(pred_loader):
-                input_ids, attention_mask, labels = self._to_device(input_ids,
-                                                                    attention_mask,
-                                                                    labels,
-                                                                    self.device)
-                # get model output
-                outputs = self.model(input_ids, attention_mask=attention_mask)
-                # calculate loss
-                loss = self.criterion(outputs, labels)
-                total_loss += loss.item()
+            for batch_idx, (input_ids, attention_mask) in enumerate(pred_loader):
+                outputs = model(input_ids, attention_mask=attention_mask)
                 outputs = torch.softmax(outputs, dim=1)
-                preds = torch.argmax(outputs, dim=1)
-                predicted.extend(preds.cpu().numpy())
-        return df
+                predicted.extend(outputs.cpu().numpy())
+        return pd.DataFrame(predicted, columns=range(len(predicted[0])))
+    
     
     
     def save_model(self, output_path):
