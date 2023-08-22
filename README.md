@@ -14,7 +14,7 @@ Anyway, it's my very first open-source project, so...
 - [x] Pipeline development (Completed by 0611)
 
 To-do:
-- [ ] Finalize some codes and in-line doc str (Target completion date: 0828)
+- [x] Finalize some codes and in-line doc str (Target completion date: 0828)
 
 ## Features :rocket:
 
@@ -30,8 +30,8 @@ To use this project, follow these steps:
 
 1. Prepare cleaned training, validation, and testing datasets with columns such as 'text' and 'label'.
 2. Explore the available pre-trained language models on Huggingface that interest you.
-3. Copy the model name and paste it into the `model_name` variable in `main.py`.
-4. :wrench: Adjust relevant parameters such as learning rate, batch size, etc., as specified in `main.py`.
+3. Copy the model name and paste it into the `model_name` variable in `train_config.py` under the `config` folder.
+4. :wrench: Adjust relevant parameters such as learning rate, batch size, etc., as specified in `train_config.py`.
 5. :wrench: Try out different techniques and parameters, such as focal loss and class balancing, which are provided in the `tools` folder.
 6. Once you have obtained the best model, you can also perform incremental training on additional data, and the necessary code is already provided for you.
 
