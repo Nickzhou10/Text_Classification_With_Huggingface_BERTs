@@ -142,7 +142,7 @@ if __name__ == '__main__':
     IncreMain.test(test_df)
 
     # prediction test
-    text = ['汽修拖拉机','冰批','家乐福','开市客','711','7-11','SEVEN ELEVEN']
+    text = ['some random text1 to predict 1','some random text to predict 2']
     res = Main.predict_text(TrainConfig, PredictionConfig, text)
 
 
