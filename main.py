@@ -130,7 +130,7 @@ if __name__ == '__main__':
     
     train_df = pd.read_csv('data/train_df.csv', index_col=0).sample(10000)
     test_df = pd.read_csv('data/test.csv', index_col=0).sample(1000)
-    pre_df = pd.read_csv('data/pre.csv', index_col=0).sample(10000)
+
     Main = TrainClassificationModel()
     Main.train(train_df, TrainConfig)
     Main.test(test_df)
