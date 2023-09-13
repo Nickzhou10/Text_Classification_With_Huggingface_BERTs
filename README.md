@@ -15,7 +15,7 @@ Anyway, it's my very first open-source project, so...
 - [x] Finalize some codes (Completed: 0828)
       
 To-do:
-- [x] Finalize some in-line doc str (Completed: 0928)
+- [x] Finalize some in-line doc str (Target: 0928)
 
 ## Features :rocket:
 
