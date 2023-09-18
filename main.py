@@ -143,7 +143,7 @@ if __name__ == '__main__':
     
     #%%
     # prediction test
-    text = ['text','SEVEN ELEVEN']
+    text = ['some text','SEVEN ELEVEN']
     res = Main.predict_text(TrainConfig, PredictionConfig, text)
 
 
