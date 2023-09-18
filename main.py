@@ -129,32 +129,22 @@ class TrainClassificationModel:
     
     
 if __name__ == '__main__':
-    
+    # train all data
     train_df = pd.read_csv('data/train_df.csv', index_col=0)
-    train_df, _ = split_df(train_df,0.997,42)
-    train_df.label.value_counts()
     test_df = pd.read_csv('data/test.csv', index_col=0)
-    test_df, _ = split_df(test_df,0.997,42)
-    #%%
     Main = TrainClassificationModel()
     Main.train(train_df, TrainConfig)
     Main.test(test_df, TrainConfig)
-    #%%
-    train_df = pd.read_csv('data/train_df.csv', index_col=0)
-    train_df, _ = split_df(train_df,0.997,41)
+    # train incremental data
+    incre_df = pd.read_csv('data/incre_df.csv', index_col=0)
     IncreMain = TrainClassificationModel()
-    IncreMain.train(train_df, IncreTrainConfig)
+    IncreMain.train(incre_df, IncreTrainConfig)
     IncreMain.test(test_df, IncreTrainConfig)
     
     #%%
     # prediction test
-    text = ['汽修拖拉机','冰批','家乐福','开市客','711','7-11','SEVEN ELEVEN']
+    text = ['巴拉巴拉','SEVEN ELEVEN']
     res = Main.predict_text(TrainConfig, PredictionConfig, text)
-
-
-    label_map = pd.read_pickle('E:/nlp_models/sa_bert_deployment/final_version/saved_model/trained_model/bert-base-chinese_refit_test/label_map.pkl')
-    label_map_new = pd.read_pickle('E:/nlp_models/sa_bert_deployment/final_version/saved_model/trained_model/test_incre_0915/label_map.pkl')
-
 
 
 
