@@ -11,9 +11,7 @@ class TrainConfig:
     random_state = 42
     num_classes = 7
     vali_split_ratio = 0.2
-    enable_balance = False
-    balance_method = 'auto'
-    deployment = False
+    
     
     # training device settings
     n_jobs = 8
@@ -21,10 +19,10 @@ class TrainConfig:
     
     # preprocessing settings
     balance_required = False
-    
+    balance_method = 'auto'
     # model training settings
     incremental_training = False
-    experiment_name = r'test'
+    experiment_name = r'test_0915'
     model_name = r'bert-base-chinese'
     trust_remote_code = False
     batch_size = 4

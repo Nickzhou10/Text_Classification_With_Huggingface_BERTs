@@ -11,9 +11,6 @@ class IncreTrainConfig:
     random_state = 42
     num_classes = 7
     vali_split_ratio = 0.2
-    enable_balance = False
-    balance_method = 'auto'
-    deployment = False
     
     # training device settings
     n_jobs = 8
@@ -21,12 +18,12 @@ class IncreTrainConfig:
     
     # preprocessing settings
     balance_required = False
-    
+    balance_method = 'auto'
     # model training settings
     incremental_training = True
     label_path = 'saved_model/trained_model/bert-base-chinese_refit_test/label_map.pkl'
-    fitted_model_path = r'saved_model/output/bert-base-chinese_refit_test'
-    experiment_name = r'test_incre'
+    fitted_model_path = r'saved_model/trained_model/bert-base-chinese_refit_test/model.pth'
+    experiment_name = r'test_incre_0915'
     model_name = r'bert-base-chinese'
     trust_remote_code = False
     batch_size = 4
@@ -47,7 +44,7 @@ class IncreTrainConfig:
     # data paths
     output_path = r'saved_model/trained_model/' + experiment_name
     model_output_path = output_path  + '/model.pth'
-    pretrained_cache_path = r'saved_model/pretrain_model'
+    pretrained_cache_path = r'saved_model/pretrain_model/' + model_name
 
     
     

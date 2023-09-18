@@ -19,25 +19,18 @@ class Preprocess:
 
     Shape:
         - dataset: df with df.label and df.text
-        - dataset for deployment process: df with df.text and set deployment=True
 
-    Args:
-        model_name (str, required): model name copied from huggingface 
-        cache_dir (str, required): place to save the pre-trained model
-        batch_size (int, optional): batch_size for DataLoader.
-            Defaults to 256.
-        n_jobs (int, optional): cpu cores to use for DataLoader.
-            Defaults to 8.
     """
     
     def __init__(self, config):
         self.config = config
         self.tokenizer = AutoTokenizer.from_pretrained(self.config.model_name,
                                                        cache_dir=self.config.pretrained_cache_path,
-                                                       trust_remote_code=True)
+                                                       trust_remote_code=self.config.trust_remote_code)
         self.drop_last = False
         self.pin_memory = False
-        
+        self.shuffle = True
+    
     
     def process_pred(self, text):
         pred = self.tokenizer(text, padding=True, max_length=512,
@@ -65,19 +58,12 @@ class Preprocess:
                                                   return_tensors='pt') # output in tensor format
         input_ids = tokens['input_ids']
         attention_mask = tokens['attention_mask']
-        
-        if self.config.deployment:
-            info = torch.tensor(df.index.tolist())
-            tensor_df = TensorDataset(input_ids, attention_mask, info)
-        else:
-            labels = torch.tensor(df.label.tolist())
-            tensor_df = TensorDataset(input_ids, attention_mask, labels)
-        
+        labels = torch.tensor(df.label.tolist())
+        tensor_df = TensorDataset(input_ids, attention_mask, labels)
         return tensor_df
     
     
     def _data_loader(self, tensor_df):
-        self.shuffle = not self.config.deployment
         dataloader = DataLoader(tensor_df, 
                                 batch_size=self.config.batch_size, 
                                 shuffle=self.shuffle, 
@@ -95,7 +81,7 @@ if __name__ == '__main__':
     # valid.label, fitted_label = label_to_id(valid.label)
     model_name = 'bert-base-chinese'  
     processor = Preprocess(model_name, cache_dir)
-    valid_dl = processor.process_data(valid, deployment=True)
+    valid_dl = processor.process_data(valid)
     
     for batch_idx, (input_ids, attention_mask, labels) in enumerate(valid_dl):
         batch_input_ids = input_ids

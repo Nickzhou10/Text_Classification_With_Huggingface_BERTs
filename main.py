@@ -74,18 +74,21 @@ class TrainClassificationModel:
         trainer.save_model(self.config.model_output_path)
         
         
-    def test(self, test_df):
+    def test(self, test_df, config):
         assert test_df.columns.isin(self.must_col).sum() == len(self.must_col), \
             r'make sure that df contains both columns text and label'
-        label_map = pd.read_pickle(self.config.output_path + '/label_map.pkl')
-        test_df.label = test_df.label.replace(label_map['inverse_mapping']) 
-        processor = Preprocess(self.config)
+        label_map = pd.read_pickle(config.output_path + '/label_map.pkl')
+        test_df.label = test_df.label.replace(label_map['inverse_mapping'])
+        config.mapping_dict['mapping'] = label_map['mapping']
+        processor = Preprocess(config)
         test_loader = processor.process_data(test_df)
-        model = AutoModelForClassification(self.config)
-        trainer = TrainModel(model, self.config)
+        model = AutoModelForClassification(config)
+        model.load_state_dict(torch.load(config.model_output_path,
+                                         map_location=config.device))
+        trainer = TrainModel(model, config)
         _, self.test_report = trainer.evaluate(test_loader)
         print(self.test_report)
-    
+
     
     def predict_text(self, train_config, pre_config, text):
         model = AutoModelForClassification(train_config)
@@ -109,10 +112,9 @@ class TrainClassificationModel:
             self.config.mapping_dict = pd.read_pickle(self.config.label_path)
         else:
             self.config.mapping_dict = label_map(df.label)
-            self.label_map_path = self.config.output_path + '/label_map.pkl'
-            with open(self.label_map_path, 'wb') as f:
-                pickle.dump(self.config.mapping_dict, f)
-            df.label = df.label.replace(self.config.mapping_dict['inverse_mapping'])
+        with open(self.config.output_path + '/label_map.pkl', 'wb') as f:
+            pickle.dump(self.config.mapping_dict, f)
+        df.label = df.label.replace(self.config.mapping_dict['inverse_mapping'])
         # train valid split, controled by split ratio
         train_df, valid_df = split_df(df, self.config.vali_split_ratio,
                                       self.config.random_state)
@@ -128,26 +130,30 @@ class TrainClassificationModel:
     
 if __name__ == '__main__':
     
-    train_df = pd.read_csv('data/train_df.csv', index_col=0).sample(10000)
-    test_df = pd.read_csv('data/test.csv', index_col=0).sample(1000)
-    pre_df = pd.read_csv('data/pre.csv', index_col=0).sample(10000)
+    train_df = pd.read_csv('data/train_df.csv', index_col=0)
+    train_df, _ = split_df(train_df,0.997,42)
+    train_df.label.value_counts()
+    test_df = pd.read_csv('data/test.csv', index_col=0)
+    test_df, _ = split_df(test_df,0.997,42)
+    #%%
     Main = TrainClassificationModel()
     Main.train(train_df, TrainConfig)
-    Main.test(test_df)
+    Main.test(test_df, TrainConfig)
+    #%%
+    train_df = pd.read_csv('data/train_df.csv', index_col=0)
+    train_df, _ = split_df(train_df,0.997,41)
+    IncreMain = TrainClassificationModel()
+    IncreMain.train(train_df, IncreTrainConfig)
+    IncreMain.test(test_df, IncreTrainConfig)
     
-    train_df = pd.read_csv('data/train_df.csv', index_col=0).sample(4000)
-    test_df = pd.read_csv('data/test.csv', index_col=0).sample(500)
-    IncreMain = TrainClassificationModel(IncreTrainConfig)
-    IncreMain.train(train_df)
-    IncreMain.test(test_df)
-
+    #%%
     # prediction test
     text = ['汽修拖拉机','冰批','家乐福','开市客','711','7-11','SEVEN ELEVEN']
     res = Main.predict_text(TrainConfig, PredictionConfig, text)
 
 
-
-
+    label_map = pd.read_pickle('E:/nlp_models/sa_bert_deployment/final_version/saved_model/trained_model/bert-base-chinese_refit_test/label_map.pkl')
+    label_map_new = pd.read_pickle('E:/nlp_models/sa_bert_deployment/final_version/saved_model/trained_model/test_incre_0915/label_map.pkl')
 
 
 
