@@ -179,7 +179,6 @@ class TrainModel:
         return pd.DataFrame(predicted, columns=range(len(predicted[0])))
     
     
-    
     def save_model(self, output_path):
         torch.save(self.model.state_dict(), output_path)  
 
