@@ -143,9 +143,9 @@ if __name__ == '__main__':
     
     #%%
     # prediction test
-    text = ['巴拉巴拉','SEVEN ELEVEN']
+    text = ['text','SEVEN ELEVEN']
     res = Main.predict_text(TrainConfig, PredictionConfig, text)
 
 
-
+    
 
