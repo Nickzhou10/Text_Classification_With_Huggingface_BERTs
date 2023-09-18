@@ -129,6 +129,7 @@ class TrainClassificationModel:
     
     
 if __name__ == '__main__':
+
     # train all data
     train_df = pd.read_csv('data/train_df.csv', index_col=0)
     test_df = pd.read_csv('data/test.csv', index_col=0)
