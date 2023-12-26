@@ -1,6 +1,6 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 # Auto Text Classification with BERTs
-This repository serves as a backup of my efforts in building pipelines and models for the 'Store Advisor' project at my current company. :tada::tada::tada:
+This repository serves as a backup of my efforts in building pipelines and models for text classification projects. :tada::tada::tada:
 
 **Note:** Due to the Non-Disclosure Agreement, data cannot be provided in this repository.
 
